@@ -37,14 +37,14 @@ class WolfGoatCabbage(Problem):
     # def actions(self, state):
     #     # that returns a list of valid actions in the given state
     # (F, W, G, C)
-    def __init__(self, initial_state=(1, 0, 0, 0, True), goal_state=(1, 1, 1, 1, False)):
-        self.initial_state = initial_state
-        self.goal_state = goal_state
+    def __init__(self, initial=(1, 0, 0, 0, True), goal=(1, 1, 1, 1, False)):
+        self.initial = initial
+        self.goal = goal
         # False --> boat is moving back to the right
         # True --> boat is moving to the left
 
     def goal_test(self, state):
-        return state == self.goal_state
+        return state == self.goal
 
     def result(self, state, action):
         # def result(self, state, action):
