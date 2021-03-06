@@ -1,42 +1,11 @@
 from search import *
+from utils import * 
 # YOUR CODE GOES HERE
 
 # Constructor setting initial and goal states
 
 
 class WolfGoatCabbage(Problem):
-    # bad_states = [
-    #     ["C", "G", "W"],
-    #     ["G", "W"],
-    #     ["C", "G"]
-    # ]
-    # goal = [True, True, True]
-
-    # def __init__(self, left=["W", "C", "G"], positionState=[False, False, False], right=[], boat=False):
-    #     self.left = left
-    #     self.right = right
-    #     self.boat = boat
-    #     self.position = position
-
-    # def goal_test(self):
-    #     return self.position == self.goal
-
-    # def result(self, state, action):
-    #     # returns the new state reached from the given state and the given action
-    #     if "W" in self.right and "C" in self.right and "G" in self.right and self.boat == True:
-    #         return self.positionState = goal
-    #     elif "W" in self.right and "C" in self.right and self.boat == True:
-    #         return self.positionState = [True, True, False]
-    #     elif "W" in self.right and self.boat == True:
-    #         return self.positionState = [True, False, False]
-    #     elif "C" in self.right and self.boat == True:
-    #         retrun self.positionState = [False, True, False]
-    #     elif "G" in self.right and self.boat == True:
-    #         return self.positionState = [False, False, True]
-
-    # def actions(self, state):
-    #     # that returns a list of valid actions in the given state
-    # (F, W, G, C)
     def __init__(self, initial=(1, 0, 0, 0, True), goal=(1, 1, 1, 1, False)):
         self.initial = initial
         self.goal = goal
@@ -47,19 +16,7 @@ class WolfGoatCabbage(Problem):
         return state == self.goal
 
     def result(self, state, action):
-        # def result(self, state, action):
-        #     """ Given state and action, return a new state that is the result of the action.
-        #     Action is assumed to be a valid action in the state """
 
-        #     # blank is the index of the blank square
-        #     blank = self.find_blank_square(state)
-        #     new_state = list(state)
-
-        #     delta = {'UP': -3, 'DOWN': 3, 'LEFT': -1, 'RIGHT': 1}
-        #     neighbor = blank + delta[action]
-        #     new_state[blank], new_state[neighbor] = new_state[neighbor], new_state[blank]
-
-        #     return tuple(new_state)
 
        # returns the new state reached from the given state and the given action
         new_state = list(state)
@@ -67,16 +24,8 @@ class WolfGoatCabbage(Problem):
         # (F, W, G, C, Position)
         # if action == "WCFG":
         # Keep track of states
-        if action == "FC":
-            # Keep track of states
-            if new_state[4] == True:
-                # Boat currently on left island and will move Cabbage to the right island
-                new_state[3] = 1
-                new_state[4] = not new_state[4]
-            else:
-                # Boat currently on the right island and will move Cabbage to the left island
-                new_state[3] = 0
-        elif action == "FW":
+
+        if action == "FW":
             # Keep track of states
             if new_state[4] == True:
                 # Boat currently on the left island and will move Wolf to the right island
@@ -103,27 +52,12 @@ class WolfGoatCabbage(Problem):
     def actions(self, state):
         # Make sure no bad movements occur
 
-        # def actions(self, state):
-        #     """ Return the actions that can be executed in the given state.
-        #     The result would be a list, since there are only four possible actions
-        #     in any given state of the environment """
-
-        #     possible_actions = ['UP', 'DOWN', 'LEFT', 'RIGHT']
-        #     index_blank_square = self.find_blank_square(state)
-
-        #     if index_blank_square % 3 == 0:
-        #         possible_actions.remove('LEFT')
-        #     if index_blank_square < 3:
-        #         possible_actions.remove('UP')
-        #     if index_blank_square % 3 == 2:
-        #         possible_actions.remove('RIGHT')
-        #     if index_blank_square > 5:
-        #         possible_actions.remove('DOWN')
-
-        #     return possible_actions
 
         possible_actions = []  # 'FC', 'FW', 'FG'
         # (F, W, G, C, Position)
+
+        # 0 - left island
+        # 1 - right island
 
         # Possible actions per scenario on the right island:
         # False --> boat on the right
@@ -135,22 +69,22 @@ class WolfGoatCabbage(Problem):
             possible_actions.append('FG')
             possible_actions.append('FC')
 
-        # Goat is currently on the right island..boat has returned to the left island
-        if state[1] == 0 and state[2] == 1 and state[3] == 1 and state[4] == True:
+        # Goat is currently on the right island..boat has returned to the left island (1, 0, 1, 0, True)
+        if state[1] == 0 and state[2] == 1 and state[3] == 0 and state[4] == True:
             possible_actions.append('FW')
             # Can't bring cabbage --> Goat will devour
 
-        # Wolf and Goat is currently on the right island but cannot stay together
+        # Wolf and Goat is currently on the right island but cannot stay together (1, 1, 1, 0, False) 
         if state[1] == 1 and state[2] == 1 and state[3] == 0 and state[4] == False:
             possible_actions.remove('FG')
             state[2] = 0
 
-        # Wolf is currently on right island
+        # Wolf is currently on right island (1, 1, 0, 0, True)
         if state[1] == 1 and state[2] == 0 and state[3] == 0 and state[4] == True:
             possible_actions.append('FC')
             # state[3] = 1
 
-        # Wolf and Cabbage currently on the right island
+        # Wolf and Cabbage currently on the right island (1, 1, 0, 1, True)
         if state[1] == 1 and state[2] == 0 and state[3] == 1 and state[4] == True:
             possible_actions.append('FG')
             # state[2] = 1
@@ -159,8 +93,24 @@ class WolfGoatCabbage(Problem):
 
 
 if __name__ == '__main__':
+    initial = (1, 0, 0, 0, True)
     wgc = WolfGoatCabbage()
-    solution = depth_first_graph_search(wgc).solution()
-    print(solution)
-    solution = breadth_first_graph_search(wgc).solution()
-    print(solution)
+    sol = depth_first_graph_search(wgc)
+    # print(sol)
+    sol = breadth_first_graph_search(wgc)
+    # print(sol)
+    
+    #Variable is the right side result only
+    # pos_states = ["FC", "FW", "FG"]
+    pos_actions = wgc.actions(initial)
+    current_state = initial
+    for x in pos_actions:
+        current_state = wgc.result(current_state, x)
+        print(current_state)
+
+# F W G C
+
+"""
+[{'G', 'F'}, {'F'}, {'C', 'F'}, {'G', 'F'}, {'W', 'F'}, {'F'}, {'G', 'F'}]
+[{'G', 'F'}, {'F'}, {'W', 'F'}, {'G', 'F'}, {'C', 'F'}, {'F'}, {'G', 'F'}]
+"""

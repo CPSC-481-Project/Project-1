@@ -1,4 +1,5 @@
 from search import *
+from utils import *
 # YOUR CODE GOES HERE
 
 # Constructor setting initial and goal states
