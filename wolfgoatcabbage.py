@@ -5,37 +5,6 @@ from search import *
 
 
 class WolfGoatCabbage(Problem):
-    # bad_states = [
-    #     ["C", "G", "W"],
-    #     ["G", "W"],
-    #     ["C", "G"]
-    # ]
-    # goal = [True, True, True]
-
-    # def __init__(self, left=["W", "C", "G"], positionState=[False, False, False], right=[], boat=False):
-    #     self.left = left
-    #     self.right = right
-    #     self.boat = boat
-    #     self.position = position
-
-    # def goal_test(self):
-    #     return self.position == self.goal
-
-    # def result(self, state, action):
-    #     # returns the new state reached from the given state and the given action
-    #     if "W" in self.right and "C" in self.right and "G" in self.right and self.boat == True:
-    #         return self.positionState = goal
-    #     elif "W" in self.right and "C" in self.right and self.boat == True:
-    #         return self.positionState = [True, True, False]
-    #     elif "W" in self.right and self.boat == True:
-    #         return self.positionState = [True, False, False]
-    #     elif "C" in self.right and self.boat == True:
-    #         retrun self.positionState = [False, True, False]
-    #     elif "G" in self.right and self.boat == True:
-    #         return self.positionState = [False, False, True]
-
-    # def actions(self, state):
-    #     # that returns a list of valid actions in the given state
     # (F, W, G, C)
     def __init__(self, initial=(1, 0, 0, 0, True), goal=(1, 1, 1, 1, False)):
         self.initial = initial
@@ -47,20 +16,6 @@ class WolfGoatCabbage(Problem):
         return state == self.goal
 
     def result(self, state, action):
-        # def result(self, state, action):
-        #     """ Given state and action, return a new state that is the result of the action.
-        #     Action is assumed to be a valid action in the state """
-
-        #     # blank is the index of the blank square
-        #     blank = self.find_blank_square(state)
-        #     new_state = list(state)
-
-        #     delta = {'UP': -3, 'DOWN': 3, 'LEFT': -1, 'RIGHT': 1}
-        #     neighbor = blank + delta[action]
-        #     new_state[blank], new_state[neighbor] = new_state[neighbor], new_state[blank]
-
-        #     return tuple(new_state)
-
        # returns the new state reached from the given state and the given action
         new_state = list(state)
     #    Possible actions on the boat
@@ -106,27 +61,6 @@ class WolfGoatCabbage(Problem):
         return tuple(new_state)
 
     def actions(self, state):
-        # Make sure no bad movements occur
-
-        # def actions(self, state):
-        #     """ Return the actions that can be executed in the given state.
-        #     The result would be a list, since there are only four possible actions
-        #     in any given state of the environment """
-
-        #     possible_actions = ['UP', 'DOWN', 'LEFT', 'RIGHT']
-        #     index_blank_square = self.find_blank_square(state)
-
-        #     if index_blank_square % 3 == 0:
-        #         possible_actions.remove('LEFT')
-        #     if index_blank_square < 3:
-        #         possible_actions.remove('UP')
-        #     if index_blank_square % 3 == 2:
-        #         possible_actions.remove('RIGHT')
-        #     if index_blank_square > 5:
-        #         possible_actions.remove('DOWN')
-
-        #     return possible_actions
-
         possible_actions = []  # 'FC', 'FW', 'FG'
 
         # (F, W, G, C, Position)
@@ -163,9 +97,9 @@ class WolfGoatCabbage(Problem):
             possible_actions.append("[C,F]")
             # state[3] = 1
 
-        if state[1] == 1 and state[2] == 0 and state[3] == 0 and state[4] == False:
-            # Currently Farmer's action after moving cabbage...going back to left island
-            possible_actions.append("[F]")
+        # if state[1] == 1 and state[2] == 0 and state[3] == 0 and state[4] == False:
+        #     # Currently Farmer's action after moving cabbage...going back to left island
+        #     possible_actions.append("[F]")
 
         if state[1] == 1 and state[2] == 0 and state[3] == 1 and state[4] == False:
             # Currently Farmer's action after moving cabbage...going back to left island
@@ -208,4 +142,4 @@ if __name__ == '__main__':
         current_state = temp_state
         # initial = (1, 0, 1, 0, False)
         print(wgc.actions(current_state))
-        # print(current_state)
+        #print(current_state)
