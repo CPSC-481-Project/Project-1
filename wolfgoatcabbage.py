@@ -1,5 +1,4 @@
 from search import *
-# YOUR CODE GOES HERE
 
 # Constructor setting initial and goal states
 
@@ -18,9 +17,8 @@ class WolfGoatCabbage(Problem):
     def result(self, state, action):
        # returns the new state reached from the given state and the given action
         new_state = list(state)
-    #    Possible actions on the boat
+        # Possible actions on the boat
         # (F, W, G, C, Position)
-        # if action == "WCFG":
         # Keep track of states
         if action[0] == "[C,F]":
             # Keep track of states
@@ -95,11 +93,6 @@ class WolfGoatCabbage(Problem):
         if state[1] == 1 and state[2] == 0 and state[3] == 0 and state[4] == True:
             # Currently Farmer's action to move cabbage to right island
             possible_actions.append("[C,F]")
-            # state[3] = 1
-
-        # if state[1] == 1 and state[2] == 0 and state[3] == 0 and state[4] == False:
-        #     # Currently Farmer's action after moving cabbage...going back to left island
-        #     possible_actions.append("[F]")
 
         if state[1] == 1 and state[2] == 0 and state[3] == 1 and state[4] == False:
             # Currently Farmer's action after moving cabbage...going back to left island
@@ -128,18 +121,14 @@ if __name__ == '__main__':
     initial = (1, 0, 0, 0, True)
     wgc = WolfGoatCabbage()
     sol = depth_first_graph_search(wgc)
-    # print(sol)
     sol = breadth_first_graph_search(wgc)
-    # print(sol)
 
     # Variable is the right side only and initial only
     print(wgc.actions(initial))
     pos_states = ["FG", "F", "FW", "FG", "FC", "F", "FG"]
     current_state = initial
     for x in pos_states:
-        # while wgc.goal_test:
         temp_state = wgc.result(current_state, wgc.actions(current_state))
         current_state = temp_state
-        # initial = (1, 0, 1, 0, False)
         print(wgc.actions(current_state))
-        #print(current_state)
+        # print(current_state)

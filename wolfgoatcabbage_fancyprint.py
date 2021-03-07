@@ -1,13 +1,12 @@
 from search import *
-# YOUR CODE GOES HERE
 
 # Constructor setting initial and goal states
-
 possible_actions_fancy = []
+
+
 class WolfGoatCabbage(Problem):
     # (F, W, G, C)
 
-    
     def __init__(self, initial=(1, 0, 0, 0, True), goal=(1, 1, 1, 1, False)):
         self.initial = initial
         self.goal = goal
@@ -80,7 +79,6 @@ class WolfGoatCabbage(Problem):
             possible_actions.append("[G,F]")
             possible_actions.append("Farmer and Goat move to the right")
             possible_actions2.append(possible_actions)
-            
 
         if state[1] == 0 and state[2] == 1 and state[3] == 0 and state[4] == False:
             # Currently Farmer's action after moving goat..going back to left island
@@ -103,7 +101,7 @@ class WolfGoatCabbage(Problem):
             possible_actions.append("[G,F]")
             possible_actions.append("Farmer and Goat move to the left")
             possible_actions2.append(possible_actions)
-            
+
         # Wolf is currently on right island and is moving cabbage to right island
         if state[1] == 1 and state[2] == 0 and state[3] == 0 and state[4] == True:
             # Currently Farmer's action to move cabbage to right island
@@ -116,7 +114,6 @@ class WolfGoatCabbage(Problem):
         #     possible_actions.append("[F]")
         #     possible_actions.append("Farmer moves to the left")
         #     possible_actions2.append(possible_actions)
-
 
         if state[1] == 1 and state[2] == 0 and state[3] == 1 and state[4] == False:
             # Currently Farmer's action after moving cabbage...going back to left island
@@ -150,20 +147,15 @@ if __name__ == '__main__':
     initial = (1, 0, 0, 0, True)
     wgc = WolfGoatCabbage()
     sol = depth_first_graph_search(wgc)
-    # print(sol)
     sol = breadth_first_graph_search(wgc)
-    # print(sol)
 
     # Variable is the right side only and initial only
-    print(wgc.actions(initial)[1]) #Print second element, which is the action
+    print(wgc.actions(initial)[1])  # Print second element, which is the action
     pos_states = ["FG", "F", "FW", "FG", "FC", "F", "FG"]
     current_state = initial
     for x in pos_states:
-        # while wgc.goal_test:
         temp_state = wgc.result(current_state, wgc.actions(current_state))
         current_state = temp_state
-        # initial = (1, 0, 1, 0, False)
-        print(wgc.actions(current_state)[1]) #Print second element, which is the action
+        # Print second element, which is the action
+        print(wgc.actions(current_state)[1])
         # print(current_state)
-
-
