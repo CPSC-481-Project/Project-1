@@ -1,71 +1,145 @@
 from search import *
+# YOUR CODE GOES HERE
 
 # Constructor setting initial and goal states
 
-'''
-Consider the following puzzle: A farmer (F) with his wolf (W), goat (G), and cabbage (C)
- come to the left bank of a river they wish to cross.
-There is a boat at the river's edge that can carry at most two things across 
-the river at a time, one of which must be the farmer. 
-If the wolf is ever left alone with the goat, the wolf will eat the goat. 
-If the goat is left alone with the cabbage, the goat will eat the cabbage. 
-The puzzle is to come up with a sequence of river crossings so that all four characters 
-arrive safely on the other side of the river.
-One way to represent the states of this problem is with two sets, the characters on the
- left and right banks of the river respectively. 
-For example: {F,G},{W,C} represents the farmer and goat on one bank, and the wolf and cabbage on the other.'''
-
-class test:
-    invalid_scenarios = [
-        ["C","G","W"],
-        ["G", "W"],
-        ["C", "G"]
-    ]
-
-    def __init__(self, left=["W", "C", "G"], right=[], boat_side= False, children=[]):
-        self.left = left
-        self.right = right
-        self.boat_side = boat_side
-        self.children = children
 
 class WolfGoatCabbage(Problem):
+    # (F, W, G, C)
+    def __init__(self, initial=(1, 0, 0, 0, True), goal=(1, 1, 1, 1, False)):
+        self.initial = initial
+        self.goal = goal
+        # False --> boat is moving back to the right
+        # True --> boat is moving to the left
 
-    def __init__(self, initial, goal, goal_state):
-        self.initial = State{"F", "W", "G", "C"} #left side of river
-        goal_state = State(
-            F = Location.A,
-            W = Location.A.
-            G = Location.A,
-            C = Location.A,
-        )
-        self.goal = {} #left side of river at the end
-    
     def goal_test(self, state):
-        #returns True if the given state is a goal state
         return state == self.goal
 
     def result(self, state, action):
-        #returns the new state reached from the given state and the given action
-        return None
+       # returns the new state reached from the given state and the given action
+        new_state = list(state)
+    #    Possible actions on the boat
+        # (F, W, G, C, Position)
+        # if action == "WCFG":
+        # Keep track of states
+        if action[0] == "[C,F]":
+            # Keep track of states
+            if new_state[4] == True:
+                # Boat currently on left island and will move Cabbage to the right island
+                new_state[3] = 1
+                new_state[4] = not new_state[4]
+            else:
+                # Boat currently on the right island and will move Cabbage to the left island
+                new_state[3] = 0
+        elif action[0] == "[W,F]":
+            # Keep track of states
+            if new_state[4] == True:
+                # Boat currently on the left island and will move Wolf to the right island
+                new_state[1] = 1
+                new_state[4] = not new_state[4]
+            else:
+                # Boat currently on the right island and will move Wolf to the left island
+                new_state[1] = 0
+
+        elif action[0] == "[G,F]":
+
+            # Keep track of states
+            if new_state[4] == True:
+                # Goat moving on the right island
+                new_state[2] = 1
+                new_state[4] = not new_state[4]  # Changing to false
+            else:
+                # Goat moving on the left island
+                new_state[2] = 0
+                new_state[4] = not new_state[4]
+
+        elif action[0] == "[F]":
+            if new_state[4] == False:
+                # Farmer is on left island now and will move back to right island
+                new_state[4] = True
+
+        return tuple(new_state)
 
     def actions(self, state):
-        #turns a list of valid actions in the given state
-        # checks for constraints 
-        def goat_eats_cabbage = (
-            state.G == state.C
-            and state.man != state.G
-        )
-        possible_group = ["F", "G", "C", "W"] #Let this be what we can attempt to do
-    
+        possible_actions = []  # 'FC', 'FW', 'FG'
 
-    
-#[{'G', 'F'}, {'F'}, {'C', 'F'}, {'G', 'F'}, {'W', 'F'}, {'F'}, {'G', 'F'}]
-#[{'G', 'F'}, {'F'}, {'W', 'F'}, {'G', 'F'}, {'C', 'F'}, {'F'}, {'G', 'F'}]
+        # (F, W, G, C, Position)
+
+        # Possible actions per scenario on the right island:
+        # False --> boat coming from right
+        # True --> boat coming from left
+
+        # Nothing is on the right island..moving any possible item to the right
+        if state[1] == 0 and state[2] == 0 and state[3] == 0 and state[4] == True:
+            # Currently Farmer's action
+            possible_actions.append("[G,F]")
+            # possible_actions.append('FC')
+
+        if state[1] == 0 and state[2] == 1 and state[3] == 0 and state[4] == False:
+            # Currently Farmer's action after moving goat..going back to left island
+            # Coming from right island
+            possible_actions.append("[F]")
+
+        # Goat is currently on the right island..boat has returned to the right island
+        if state[1] == 0 and state[2] == 1 and state[3] == 0 and state[4] == True:
+            # Currently Farmer's action to move wolf to left island
+            possible_actions.append("[W,F]")
+            # Can't bring cabbage --> Goat will devour
+
+        # Wolf and Goat is currently on the right island but cannot stay together
+        if state[1] == 1 and state[2] == 1 and state[3] == 0 and state[4] == False:
+            # Currently Farmer's action to return Goat on left island
+            possible_actions.append("[G,F]")
+
+        # Wolf is currently on right island and is moving cabbage to right island
+        if state[1] == 1 and state[2] == 0 and state[3] == 0 and state[4] == True:
+            # Currently Farmer's action to move cabbage to right island
+            possible_actions.append("[C,F]")
+            # state[3] = 1
+
+        # if state[1] == 1 and state[2] == 0 and state[3] == 0 and state[4] == False:
+        #     # Currently Farmer's action after moving cabbage...going back to left island
+        #     possible_actions.append("[F]")
+
+        if state[1] == 1 and state[2] == 0 and state[3] == 1 and state[4] == False:
+            # Currently Farmer's action after moving cabbage...going back to left island
+            possible_actions.append("[F]")
+
+        # Wolf and Cabbage currently on the right island
+        if state[1] == 1 and state[2] == 0 and state[3] == 1 and state[4] == True:
+            # Currently Farmer's action to move Goat to right island
+            possible_actions.append("[G,F]")
+            # state[2] = 1
+
+        if state[1] == 1 and state[2] == 1 and state[3] == 1 and state[4] == False:
+            # Currently Farmer's action to move Goat to right island
+            possible_actions.append("[F,W,G,C]")
+
+        return possible_actions
+
+    def h(self, node):
+        """ Return the heuristic value for a given state. Default heuristic function used is 
+        h(n) = number of misplaced tiles """
+
+        return sum(s != g for (s, g) in zip(node.state, self.goal))
 
 
 if __name__ == '__main__':
+    initial = (1, 0, 0, 0, True)
     wgc = WolfGoatCabbage()
-    solution = depth_first_graph_search(wgc).solution()
-    print(solution)
-    solution = breadth_first_graph_search(wgc).solution()
-    print(solution)
+    sol = depth_first_graph_search(wgc)
+    # print(sol)
+    sol = breadth_first_graph_search(wgc)
+    # print(sol)
+
+    # Variable is the right side only and initial only
+    print(wgc.actions(initial))
+    pos_states = ["FG", "F", "FW", "FG", "FC", "F", "FG"]
+    current_state = initial
+    for x in pos_states:
+        # while wgc.goal_test:
+        temp_state = wgc.result(current_state, wgc.actions(current_state))
+        current_state = temp_state
+        # initial = (1, 0, 1, 0, False)
+        print(wgc.actions(current_state))
+        #print(current_state)

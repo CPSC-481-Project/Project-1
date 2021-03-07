@@ -267,6 +267,8 @@ def best_first_graph_search(problem, f, display=False):
     a best first search you can examine the f values of the path returned."""
     f = memoize(f, 'f')
     node = Node(problem.initial)
+    if problem.goal_test(node.state):
+        return node
     frontier = PriorityQueue('min', f)
     frontier.append(node)
     explored = set()
