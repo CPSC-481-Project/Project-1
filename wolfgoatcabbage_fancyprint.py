@@ -27,14 +27,15 @@ class WolfGoatCabbage(Problem):
                 new_state[2] = not new_state[2]
             elif x == "C":
                 new_state[3] = not new_state[3]
-            
-        #Change from t to f or f to t
+
+        # Change from t to f or f to t
         new_state[4] = not new_state[4]
 
         return tuple(new_state)
 
     def actions(self, state):
-        possible_actions = ['Farmer','Wolf', 'Goat', 'Cabbage']  # 'FC', 'FW', 'FG'
+        possible_actions = ['Farmer', 'Wolf',
+                            'Goat', 'Cabbage']  # 'FC', 'FW', 'FG'
         Farmer = "Farmer"
         Wolf = "Wolf"
         Goat = "Goat"
@@ -79,8 +80,8 @@ class WolfGoatCabbage(Problem):
         # Wolf and Goat is currently on the right island but cannot stay together
         if state[1] == 1 and state[2] == 1 and state[3] == 0 and state[4] == False:
             # Currently Farmer's action to return Goat on left island
-            #possible_actions.append("[G,F]")
-            print(Farmer + " and " + Goat +" crosses back")
+            # possible_actions.append("[G,F]")
+            print(Farmer + " and " + Goat + " crosses back")
             possible_actions.remove("Wolf")
             possible_actions.remove("Cabbage")
 
@@ -113,7 +114,7 @@ class WolfGoatCabbage(Problem):
             possible_actions.remove("Wolf")
             possible_actions.remove("Cabbage")
 
-        # print(state)   
+        # print(state)
         return possible_actions
 
     def h(self, node):
@@ -126,64 +127,9 @@ class WolfGoatCabbage(Problem):
 if __name__ == '__main__':
     initial = (1, 0, 0, 0, True)
     wgc = WolfGoatCabbage(initial)
-    print("This is DFS")
+    print("This is DFS:")
     solution = depth_first_graph_search(wgc).solution()
-    print(solution) 
-    print("\n\nThis is BitchFS") 
+    print(solution)
+    print("\n\nThis is BFS:")
     solution = breadth_first_graph_search(wgc).solution()
     print(solution)
-    # Variable is the right side only and initial only
-    # print(wgc.actions(initial))
-
-    # current_state = initial
-    # while not wgc.goal_test(current_state):
-    #     temp_state = wgc.result(current_state, wgc.actions(current_state))
-    #     current_state = temp_state
-    #     # print(wgc.actions(current_state))
-    #     print(current_state)
-
-
-"""
-    Take the goat over
-    Return
-    Take the wolf or cabbage over
-    Return with the goat
-    Take the cabbage or wolf over
-    Return
-    Take goat over
-"""
-
-
-"""
-['G', 'F', 'W', 'G', 'C', 'F', 'G'] - DFS
-['F', 'W', 'F', 'G', 'C'] - BFS
-['F', 'G']
-['F']
-['F', 'W']
-['F', 'G']
-['F', 'C']
-['F']
-['F', 'G']
-[]
-"""
-
-"""
-FarmerGoat crosses
-Farmer crosses
-['Goat', 'Farmer', 'Wolf', 'Goat', 'Cabbage', 'Farmer', 'Goat']
-This is DFS
-
-FarmerGoat crosses
-Farmer crosses
-['Farmer', 'Wolf', 'Farmer', 'Goat', 'Cabbage']
-This is BFS
-FarmerGoat crosses
-['Farmer', 'Goat']
-"""
-
-"""
-# Nothing is on the right island..moving any possible item to the right
-        if state[1] == 0 and state[2] == 0 and state[3] == 0 and state[4] == True:
-            # Currently Farmer's action
-            possible_actions.append("Farmer and Goat cross")
-"""
