@@ -129,7 +129,7 @@ if __name__ == '__main__':
     print("This is DFS")
     solution = depth_first_graph_search(wgc).solution()
     print(solution) 
-    print("\n\nThis is BitchFS") 
+    print("\n\nThis is BFS") 
     solution = breadth_first_graph_search(wgc).solution()
     print(solution)
     # Variable is the right side only and initial only
