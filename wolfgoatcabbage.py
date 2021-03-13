@@ -270,6 +270,7 @@ if __name__ == '__main__':
     #     print(wgc.actions(newState))
     # print("\n")
 
+
 #     # BFS    Left contain Wolf, Cabbage and the Boat is on the Left
 #         elif state[1] == 1 and state[2] == 0 and state[3] == 0 and state[4] == True:
 #             # Farmer is moving Cabbage to the Right
@@ -288,4 +289,4 @@ if __name__ == '__main__':
 #             print("1Farmer and Wolf cross")
 #             newActions.remove("Goat")
 #             newActions.remove("Cabbage")
-'''
+```
