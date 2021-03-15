@@ -69,12 +69,14 @@ class WolfGoatCabbage(Problem):
             possible_actions.remove("Goat")
             possible_actions.remove("Cabbage")
 
-        # Goat is currently on the right island..boat has returned to the right island
+        # Goat is currently on the right island..
         if state[1] == 0 and state[2] == 1 and state[3] == 0 and state[4] == True:
+            #FARMER WOLF CABBAGE ON LEFT SIDE
+            #GOAT ON RIGHT SIDE
             # Currently Farmer's action to move wolf to left island
             print(Farmer + " and " + Wolf + " crosses")
             possible_actions.remove("Goat")
-            possible_actions.remove("Cabbage")
+            #possible_actions.remove("Cabbage")
             # Can't bring cabbage --> Goat will devour
 
         # Wolf and Goat is currently on the right island but cannot stay together
@@ -83,7 +85,7 @@ class WolfGoatCabbage(Problem):
             # possible_actions.append("[G,F]")
             print(Farmer + " and " + Goat + " crosses back")
             possible_actions.remove("Wolf")
-            possible_actions.remove("Cabbage")
+            #possible_actions.remove("Cabbage")
 
         # Wolf is currently on right island and is moving cabbage to right island
         if state[1] == 1 and state[2] == 0 and state[3] == 0 and state[4] == True:
@@ -117,13 +119,15 @@ class WolfGoatCabbage(Problem):
         # print(state)
         return possible_actions
 
+    
     def h(self, node):
         """ Return the heuristic value for a given state. Default heuristic function used is 
         h(n) = number of misplaced tiles """
+        return (len(node.state)/2)
 
-        return sum(s != g for (s, g) in zip(node.state, self.goal))
-
-
+#astar is 15
+#
+ 
 if __name__ == '__main__':
     initial = (1, 0, 0, 0, True)
     wgc = WolfGoatCabbage(initial)
@@ -133,3 +137,8 @@ if __name__ == '__main__':
     print("\n\nThis is BFS:")
     solution = breadth_first_graph_search(wgc).solution()
     print(solution)
+    
+    print("\n\nHeuristic value:")
+    print(wgc.h(astar_search(wgc, display = True)))
+    
+    

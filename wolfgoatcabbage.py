@@ -1,11 +1,16 @@
-from search import *
+#CPSC 481
+# Jared Castaneda
+# Tiffanny Hernaez
+# Ricardo martinez
+
+rom search import *
 
 # Constructor setting initial and goal states
 
 
 class WolfGoatCabbage(Problem):
     # (F, W, G, C)
-    def __init__(self, initial_state, goal=(True, True, True, True, False)):
+    def __init__(self, initial_state, goal=(1, 1, 1, 1)):
         super().__init__(initial_state, goal)
         # False --> boat is moving back to the right
         # True --> boat is moving to the left
@@ -20,96 +25,49 @@ class WolfGoatCabbage(Problem):
         # (F, W, G, C, Position)
         # Keep track of states
 
-        for x in action:
-            if x == "W":
-                new_state[1] = not new_state[1]
-            elif x == "G":
-                new_state[2] = not new_state[2]
-            elif x == "C":
-                new_state[3] = not new_state[3]
-
-        # Change from t to f or f to t
-        new_state[4] = not new_state[4]
+        if action == "F":
+            new_state[0] = not new_state[0]
+        if action == "FW":
+            new_state[0] = not new_state[0]
+            new_state[1] = not new_state[1]
+        elif action == "FG":
+            new_state[0] = not new_state[0]
+            new_state[2] = not new_state[2]
+        elif action == "FC":
+            new_state[0] = not new_state[0]
+            new_state[3] = not new_state[3]
 
         return tuple(new_state)
 
     def actions(self, state):
-        possible_actions = ['F', 'W', 'G', 'C']  # 'FC', 'FW', 'FG'
+        possible_actions = ['F', 'FW', 'FG', 'FC']
 
-        # (F, W, G, C, Position)
+        # (F, W, G, C,)
         # FARMER 0
         # WOLF 1
         # GOAT 2
         # CABBAGE 3
-        # POS 4
 
-        # Possible actions per scenario on the right island:
-        # False --> boat coming from right
-        # True --> boat coming from left
-
-        # Nothing is on the right island..moving any possible item to the right
-        if state[1] == 0 and state[2] == 0 and state[3] == 0 and state[4] == True:
-            # Currently Farmer's action
-            # possible_actions.append("[G,F]")
-            # possible_actions.append('FC')
-            print("[G,F]")
-            possible_actions.remove("W")
-            possible_actions.remove("C")
-
-        if state[1] == 0 and state[2] == 1 and state[3] == 0 and state[4] == False:
-            # Currently Farmer's action after moving goat..going back to left island
-            # Coming from right island
-            print("[F]")
-            possible_actions.remove("W")
-            possible_actions.remove("G")
-            possible_actions.remove("C")
-
-        # Goat is currently on the right island..boat has returned to the right island
-        if state[1] == 0 and state[2] == 1 and state[3] == 0 and state[4] == True:
-            # Currently Farmer's action to move wolf to left island
-            print("[W,F]")
-            possible_actions.remove("G")
-            possible_actions.remove("C")
-            # Can't bring cabbage --> Goat will devour
-
-        # Wolf and Goat is currently on the right island but cannot stay together
-        if state[1] == 1 and state[2] == 1 and state[3] == 0 and state[4] == False:
-            # Currently Farmer's action to return Goat on left island
-            # possible_actions.append("[G,F]")
-            print("[G,F]")
-            possible_actions.remove("W")
-            possible_actions.remove("C")
-
-        # Wolf is currently on right island and is moving cabbage to right island
-        if state[1] == 1 and state[2] == 0 and state[3] == 0 and state[4] == True:
-            # Currently Farmer's action to move cabbage to right island
-            print("[C,F]")
-            possible_actions.remove("W")
-            possible_actions.remove("G")
-
-        if state[1] == 1 and state[2] == 0 and state[3] == 1 and state[4] == False:
-            # Currently Farmer's action after moving cabbage...going back to left island
-            print("[F]")
-            possible_actions.remove("W")
-            possible_actions.remove("G")
-            possible_actions.remove("C")
-
-        # Wolf and Cabbage currently on the right island
-        if state[1] == 1 and state[2] == 0 and state[3] == 1 and state[4] == True:
-            # Currently Farmer's action to move Goat to right island
-            print("[G,F]")
-            possible_actions.remove("W")
-            possible_actions.remove("C")
-
-        if state[1] == 1 and state[2] == 1 and state[3] == 1 and state[4] == False:
-            # Currently Farmer's action to move Goat to right island
+        # (0 0 0 1) or (1 1 1 0) ///////// (0 1 0 0) or (1 0 1 1)
+        #Farmer wolf goat on one side and cabbage is not, you can't leave because wolf and goat by themselves. If farmer goat and cabbage are on one side, can't leave because goat and cabbage are alone.
+        if state[0] == state[1] == state[2] != state[3] or state[0] == state[2] == state[3] != state[1]:
             possible_actions.remove("F")
-            possible_actions.remove("G")
-            possible_actions.remove("W")
-            possible_actions.remove("C")
+
+        #Cross the river
+        if state[0] != state[1]:
+            possible_actions.remove("FW") #Can't move wolf because farmer and wolf on opposite sides
+        if state[0] != state[2]:
+            possible_actions.remove("FG") #Can't move goat because farmer and goat on opposite sides
+        if state[0] != state[3]:
+            possible_actions.remove("FC") #Can't move cabbage because farmer and cabbage on opposite sides    
+        
+        # All on one side. Goat will eat cabbage (Cant move wolf) and wolf will eat goat (Cant move goat) if left alone.
+        if state[0] == state[1] == state[2] == state[3]:
+            possible_actions.remove("FW") #Goat eats cabbage so you can't move wolf to leave GC alone
+            possible_actions.remove("FC") #Wolf eats goat so you can't move cabbage to leave WG alone
 
         return possible_actions
-
+        
     def h(self, node):
         """ Return the heuristic value for a given state. Default heuristic function used is 
         h(n) = number of misplaced tiles """
@@ -118,12 +76,12 @@ class WolfGoatCabbage(Problem):
 
 
 if __name__ == '__main__':
-    initial = (1, 0, 0, 0, True)
+    initial = (1, 0, 0, 0)
     wgc = WolfGoatCabbage(initial)
-    print("This is DFS:")
+    print("Depth first graph search:")
     solution = depth_first_graph_search(wgc).solution()
     print(solution)
 
-    print("\n\nThis is BFS:")
+    print("\n\nBreadth first graph search:")
     solution = breadth_first_graph_search(wgc).solution()
     print(solution)
